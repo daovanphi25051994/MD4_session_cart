@@ -1,40 +1,46 @@
 package com.codegym.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cart {
-    private Long id;
-    private String nameProduct;
-    private int quantity;
+    private List<ProductCart> products;
+    private int totalQuantity;
+    private double totalPrice;
 
     public Cart() {
+        products = new ArrayList<>();
+        totalQuantity = 0;
+        totalPrice = 0;
     }
 
-    public Cart(Long id, String nameProduct, int quantity) {
-        this.id = id;
-        this.nameProduct = nameProduct;
-        this.quantity = quantity;
+    public Cart(List<ProductCart> products, int totalQuantity, double totalPrice) {
+        this.products = products;
+        this.totalQuantity = totalQuantity;
+        this.totalPrice = totalPrice;
     }
 
-    public Long getId() {
-        return id;
+    public List<ProductCart> getProducts() {
+        return products;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProducts(List<ProductCart> products) {
+        this.products = products;
     }
 
-    public String getNameProduct() {
-        return nameProduct;
+    public int getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public void setNameProduct(String nameProduct) {
-        this.nameProduct = nameProduct;
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

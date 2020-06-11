@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -9,7 +9,34 @@
 </head>
 <body>
 <table >
-    zgzga
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>IMAGE</th>
+            <th>NAME</th>
+            <th>PRICE</th>
+            <th>QUANTITY</th>
+            <th>TOTAL</th>
+            <th>+</th>
+            <th>-</th>
+            <th>xoa</th>
+        </tr>
+        <tr th:each="product : ${cart.getProducts()}">
+            <td th:text="${product.getId()}"></td>
+            <td th:text="${product.getImage()}"></td>
+            <td th:text="${product.getName()}"></td>
+            <td th:text="${product.getPrice()}"></td>
+            <td th:text="${product.getQuantity()}"></td>
+            <td th:text="${product.getQuantity() * product.getPrice()}"></td>
+            <td><button>+</button></td>
+            <td><button>+</button></td>
+            <td><button>delete</button></td>
+        </tr>
+        <tr>
+            <th rowspan="4" th:text="${'total quantity : '+ cart.getTotalQuantity()}"></th>
+            <th rowspan="4" th:text="${'total price : '+ cart.getTotalPrice()}"></th>
+        </tr>
+    </table>
 </table>
 </body>
 </html>
