@@ -45,7 +45,7 @@ public class HomeController {
                 productCart.setQuantity(productCart.getQuantity() + 1);
                 int totalQuantity = 0;
                 double totalPrice = 0;
-                for (ProductCart productCart1 : cart.getProducts()){git
+                for (ProductCart productCart1 : cart.getProducts()){
                     totalQuantity += productCart1.getQuantity();
                     totalPrice += productCart1.getQuantity() * productCart1.getPrice();
                 }
