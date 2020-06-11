@@ -5,38 +5,43 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>Cart</title>
 </head>
 <body>
-<table >
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>IMAGE</th>
-            <th>NAME</th>
-            <th>PRICE</th>
-            <th>QUANTITY</th>
-            <th>TOTAL</th>
-            <th>+</th>
-            <th>-</th>
-            <th>xoa</th>
-        </tr>
-        <tr th:each="product : ${cart.getProducts()}">
-            <td th:text="${product.getId()}"></td>
-            <td th:text="${product.getImage()}"></td>
-            <td th:text="${product.getName()}"></td>
-            <td th:text="${product.getPrice()}"></td>
-            <td th:text="${product.getQuantity()}"></td>
-            <td th:text="${product.getQuantity() * product.getPrice()}"></td>
-            <td><button>+</button></td>
-            <td><button>+</button></td>
-            <td><button>delete</button></td>
-        </tr>
-        <tr>
-            <th rowspan="4" th:text="${'total quantity : '+ cart.getTotalQuantity()}"></th>
-            <th rowspan="4" th:text="${'total price : '+ cart.getTotalPrice()}"></th>
-        </tr>
-    </table>
-</table>
+<div class="container-fluid row">
+    <div class="col-xl-9">
+        <form class="row" th:action="@{/addToCart}" method="post" th:each="product : ${cart.getProducts()}">
+            <div class="col-xl-3"><img class="card-img-top" th:src="@{/resources/images/{image}(image=${product.getImage()})}"
+                                       width="200px" height="100px"/></div>
+            <div class="col-xl-6">
+                <p th:text="${product.getName()}"></p>
+                <p th:text="${product.getPrice()}"></p>
+                <p>
+                    <span><a th:href="@{/product-delete/{id}(id=${product.getId()})}">xóa</a></span>
+                </p>
+            </div>
+            <div class="col-xl-3">
+                <span th:text="${product.getQuantity() * product.getPrice()}"></span>
+                <span><a th:href="@{/product-subtraction/{id}(id=${product.getId()})}">-</a></span>
+                <span th:text="${product.getQuantity()}"></span>
+                <span><a th:href="@{/product-plus/{id}(id=${product.getId()})}">+</a></span>
+            </div>
+        </form>
+    </div>
+    <div class="col-xl-3">
+        <div>
+            <p th:text="${'total quantity : '+ cart.getTotalQuantity()}"></p>
+        </div>
+        <div>
+            <p th:text="${'total price : '+ cart.getTotalPrice()}"></p>
+        </div>
+        <div>
+            <button>Mua</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

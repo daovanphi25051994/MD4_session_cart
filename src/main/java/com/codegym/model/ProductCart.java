@@ -1,7 +1,7 @@
 package com.codegym.model;
 
 public class ProductCart {
-    private String id;
+    private Long id;
     private String name;
     private String image;
     private float price;
@@ -10,7 +10,7 @@ public class ProductCart {
     public ProductCart() {
     }
 
-    public ProductCart(String id, String name, String image, float price, int quantity) {
+    public ProductCart(Long id, String name, String image, float price, int quantity) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -18,11 +18,11 @@ public class ProductCart {
         this.quantity = quantity;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

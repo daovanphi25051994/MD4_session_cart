@@ -15,7 +15,7 @@
 </div>
 <div>
     <div class="row">
-        <form th:action="@{/addToCart}" th:object="${product}" method="post" class="col-xl-3" th:each="product : ${products}">
+        <form th:action="@{/addToCart}" method="post" class="col-xl-3" th:each="product : ${products}">
             <div class="card" style="width: 18rem;">
                 <td><img class="card-img-top" th:src="@{/resources/images/{image}(image=${product.getImage()})}" width="200px"
                          height="200px"/></td>

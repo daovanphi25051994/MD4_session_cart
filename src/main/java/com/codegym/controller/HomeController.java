@@ -4,11 +4,13 @@ import com.codegym.model.Cart;
 import com.codegym.model.Customer;
 import com.codegym.model.Product;
 import com.codegym.model.ProductCart;
+import com.codegym.service.cart.ICartService;
 import com.codegym.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,8 +24,12 @@ import java.util.List;
 @SessionAttributes("cart")
 @RequestMapping("/")
 public class HomeController {
+
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private ICartService cartService;
 
     @ModelAttribute("cart")
     public Cart setUpCart() {
@@ -38,33 +44,59 @@ public class HomeController {
     }
 
     @PostMapping("/addToCart")
-    public ModelAndView addToCart(@ModelAttribute Product product, @RequestParam String id, @ModelAttribute("cart") Cart cart) {
+    public ModelAndView addToCart(@RequestParam Long id, @ModelAttribute("cart") Cart cart) {
         ModelAndView modelAndView = new ModelAndView("product/cart");
-        for (ProductCart productCart : cart.getProducts()) {
-            if (productCart.getId().equals(id)) {
-                productCart.setQuantity(productCart.getQuantity() + 1);
-                int totalQuantity = 0;
-                double totalPrice = 0;
-                for (ProductCart productCart1 : cart.getProducts()){
-                    totalQuantity += productCart1.getQuantity();
-                    totalPrice += productCart1.getQuantity() * productCart1.getPrice();
-                }
-                cart.setTotalQuantity(totalQuantity);
-                cart.setTotalPrice(totalPrice);
-                return modelAndView;
-            }
+        List<ProductCart> productCarts = cart.getProducts();
+        boolean isProductExist = cartService.isExists(id, productCarts);
+        if (isProductExist) {
+            ProductCart productCart = cartService.findOne(id, productCarts);
+            productCart.setQuantity(productCart.getQuantity() + 1);
+        } else {
+            Product product = productService.getOne(id);
+            ProductCart productCart = new ProductCart(id, product.getName(), product.getImage(), product.getPrice(), 1);
+            productCarts.add(productCart);
         }
-        Long id1 = Long.valueOf(id);
-        Product product1 = productService.getOne(id1);
-        ProductCart productCart = new ProductCart(id, product1.getName(), product1.getImage(), product1.getPrice(), 1);
-        cart.getProducts().add(productCart);
-        int totalQuantity = 0;
-        double totalPrice = 0;
-        for (ProductCart productCart1 : cart.getProducts()){
-            totalQuantity += productCart1.getQuantity();
-            totalPrice += productCart1.getQuantity() * productCart1.getPrice();
-        }
+        int totalQuantity = cartService.getTotalQuantity(productCarts);
         cart.setTotalQuantity(totalQuantity);
+        double totalPrice = cartService.getTotalPrice(productCarts);
+        cart.setTotalPrice(totalPrice);
+        return modelAndView;
+    }
+
+    @GetMapping("/product-plus/{id}")
+    public ModelAndView plusProduct(@PathVariable Long id, @ModelAttribute("cart") Cart cart) {
+        ModelAndView modelAndView = new ModelAndView("product/cart");
+        List<ProductCart> productCarts = cart.getProducts();
+        ProductCart productCart = cartService.findOne(id, productCarts);
+        productCart.setQuantity(productCart.getQuantity() + 1);
+        int totalQuantity = cartService.getTotalQuantity(productCarts);
+        cart.setTotalQuantity(totalQuantity);
+        double totalPrice = cartService.getTotalPrice(productCarts);
+        cart.setTotalPrice(totalPrice);
+        return modelAndView;
+    }
+
+    @GetMapping("/product-subtraction/{id}")
+    public ModelAndView subtractionProduct(@PathVariable Long id, @ModelAttribute("cart") Cart cart) {
+        ModelAndView modelAndView = new ModelAndView("product/cart");
+        List<ProductCart> productCarts = cart.getProducts();
+        ProductCart productCart = cartService.findOne(id, productCarts);
+        productCart.setQuantity(productCart.getQuantity() - 1);
+        int totalQuantity = cartService.getTotalQuantity(productCarts);
+        cart.setTotalQuantity(totalQuantity);
+        double totalPrice = cartService.getTotalPrice(productCarts);
+        cart.setTotalPrice(totalPrice);
+        return modelAndView;
+    }
+
+    @GetMapping("/product-delete/{id}")
+    public ModelAndView removeProduct(@PathVariable Long id, @ModelAttribute("cart") Cart cart) {
+        ModelAndView modelAndView = new ModelAndView("product/cart");
+        List<ProductCart> productCarts = cart.getProducts();
+        cartService.remove(id, productCarts);
+        int totalQuantity = cartService.getTotalQuantity(productCarts);
+        cart.setTotalQuantity(totalQuantity);
+        double totalPrice = cartService.getTotalPrice(productCarts);
         cart.setTotalPrice(totalPrice);
         return modelAndView;
     }

@@ -1,6 +1,8 @@
 package com.codegym.config;
 
 
+import com.codegym.service.cart.CartService;
+import com.codegym.service.cart.ICartService;
 import com.codegym.service.product.IProductService;
 import com.codegym.service.product.ProductService;
 import org.springframework.beans.BeansException;
@@ -170,4 +172,8 @@ public class AppConfiguration extends WebMvcConfigurerAdapter implements Applica
         return new ProductService();
     }
 
+    @Bean
+    public ICartService cartService(){
+        return new CartService();
+    }
 }
